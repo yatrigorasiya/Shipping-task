@@ -10,6 +10,7 @@ Shipment status tracking
 ✅ Admin Dashboard
 
 Admin authentication using JWT
+Login screen (use static credentials: admin@shipping.company / password)
 View and manage all shipments
 Filter & sort shipments by status
 Generate pickup requests
