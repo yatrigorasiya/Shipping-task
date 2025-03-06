@@ -19,9 +19,10 @@ const transporter = nodemailer.createTransport({
 // Function to send email
 export const sendShipmentUpdateEmail = async (recipientEmail, trackingNumber, newStatus) => {
     if (!recipientEmail) {
-        console.error("❌ Recipient email is missing.");
+        console.error("Recipient email is missing.");
         return;
     }
+    console.log(recipientEmail)
 
     const mailOptions = {
         from: process.env.EMAIL_USER,
@@ -37,8 +38,8 @@ export const sendShipmentUpdateEmail = async (recipientEmail, trackingNumber, ne
 
     try {
         const info = await transporter.sendMail(mailOptions);
-        console.log("📧 Email sent:", info.response);
+        console.log("Email sent:", info.response);
     } catch (error) {
-        console.error("❌ Error sending email:", error.message);
+        console.error(" Error sending email:", error.message);
     }
 };

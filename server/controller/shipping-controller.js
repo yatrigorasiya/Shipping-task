@@ -11,14 +11,14 @@ export const Shipping = async(req,res)=>{
         const trackingNumber = nanoid(10);
         const shipment = await Shipment.create({ ...req.body, trackingNumber });
 
-        // Extract recipient email from request body
+       
         const recipientEmail = req.body.recipient?.email;
         
         if (recipientEmail) {
             try {
                 await sendShipmentUpdateEmail(recipientEmail, trackingNumber, "Pending");
             } catch (emailError) {
-                console.error("⚠️ Email sending failed:", emailError.message);
+                console.error(" Email sending failed:", emailError.message);
             }
         }
 
@@ -31,14 +31,14 @@ export const Shipping = async(req,res)=>{
             trackingNumber
         });
     } catch (error) {
-        console.error("❌ Error:", error);
+        console.error(" Error:", error);
         return res.status(500).json({ message: "Internal server error" });
     }
 
 
 }
 
-
+//get shipping:-
 export const shippingGet = async(req,res)=>{
     try {
         const { status, sortBy, order } = req.query;
@@ -97,14 +97,63 @@ export const getpickup = async(req,res)=>{
     }
 
 }
+//update pickup request:-
 
 export const putpickup = async(req,res)=>{
       try {
         const { status } = req.body;
         const updatedRequest = await Shipment.findByIdAndUpdate(req.params.id, { status }, { new: true });
-        res.json(updatedRequest);
+        if (!updatedRequest) {
+            return res.status(404).json({ error: " Pickup request not found" });
+        }
+
+        // Send email notification when pickup request status is updated
+        const recipientEmail = updatedRequest.recipient?.email;
+        if (recipientEmail) {
+            await sendShipmentUpdateEmail(recipientEmail, updatedRequest.trackingNumber, status);
+        }
+
+        res.json({
+            message: " Pickup request updated successfully!",
+            updatedRequest
+        });
+
+      
     } catch (error) {
         res.status(500).json({ error: "Failed to update pickup request" });
     }
+    
 
 }
+
+
+// Update Shipment Status and Send Email Notification
+export const updateShipmentStatus = async (req, res) => {
+    try {
+        const { trackingNumber, newStatus } = req.body;
+
+       
+        const shipment = await Shipment.findOne({ trackingNumber });
+        if (!shipment) {
+            return res.status(404).json({ message: " Shipment not found" });
+        }
+
+      
+        shipment.status = newStatus;
+        await shipment.save();
+
+        // Send email notification
+        const recipientEmail = shipment.recipient?.email;
+        if (recipientEmail) {
+            await sendShipmentUpdateEmail(recipientEmail, trackingNumber, newStatus);
+        }
+
+        res.status(200).json({
+            message: " Shipment status updated successfully!",
+            shipment
+        });
+    } catch (error) {
+        console.error(" Error updating shipment status:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
