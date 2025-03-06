@@ -32,13 +32,14 @@ export const Admin = ()=>{
     };
     return (
         <>
-        <div className="mt-3">
+           <div className="mt-3">
             <h2>Admin Dashboard</h2>
 
-            <div className="mb-4 flex space-x-4">
+            <div className="mb-4  d-flex justify-content-center">
        
        
         {/* filter */}
+       
         <select className="border p-2 me-2" onChange={e => setSortBy(e.target.value)}>
           <option value="createdAt">Date</option>
           <option value="trackingNumber">Tracking Number</option>
@@ -49,6 +50,9 @@ export const Admin = ()=>{
           <option value="desc">Descending</option>
           <option value="asc">Ascending</option>
         </select>
+
+        
+       
         </div>
             <table className="border w-full">
                 <thead>
@@ -89,7 +93,7 @@ export const Admin = ()=>{
         <option value="Delivered">Delivered</option>
     </select>
 </td>
-                            <Link to={`/admin/shipment/${shipment.trackingNumber}`} className="link">View Details</Link>
+                            <Link to={`/admin/shipment/${shipment.trackingNumber}`} className="link btn btn-primary">ViewDetails</Link>
                         </tr>
                     ))}
                 </tbody>

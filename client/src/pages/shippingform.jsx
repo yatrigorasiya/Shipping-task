@@ -98,7 +98,7 @@ export const ShippingForm = () => {
     return (
    
         <div className="container mt-4">
-            <h2 className="text-center text-primary">Create Shipping Request</h2>
+            <h2 className="text-center mb-4">Create Shipping Request</h2>
            <form onSubmit={handleSubmit} className="row g-3"> 
 
            {[
